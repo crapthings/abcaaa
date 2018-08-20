@@ -1,0 +1,11 @@
+body {
+  font-family: 'SF Pro SC', 'SF Pro Text', 'SF Pro Icons', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
+}
+
+textarea {
+  font-size: 16px;
+  outline: none;
+  border: none;
+  width: 100%;
+  resize: none;
+}
