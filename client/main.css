@@ -7,5 +7,26 @@ textarea {
   outline: none;
   border: none;
   width: 100%;
+  padding: 8px;
   resize: none;
+  background-color: ghostwhite;
+}
+
+input[type='text'] {
+  width: 100%;
+}
+
+#doc-body {
+  flex: 1;
+  padding: 16px;
+}
+
+#doc-side {
+  width: 320px;
+  padding: 16px;
+  background-color: palegreen;
+}
+
+.active {
+  background-color: palegreen;
 }

@@ -9,6 +9,8 @@ const Nav = ({ history }) => {
 export default children => props => (
   <div>
     <Nav {...props} />
-    {children(props)}
+    <div>
+      {children(props)}
+    </div>
   </div>
 )
