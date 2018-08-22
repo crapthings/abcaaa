@@ -187,32 +187,18 @@ class Side extends Component {
   }
 }
 
-class Document extends Component {
+class DocumentComponent extends Component {
   state = {
-    ready: false,
     sideId: null,
-  }
-
-  componentDidMount() {
-    const { _id } = this.props.match.params
-    this.tracker = Tracker.autorun(() => {
-      const ready = Meteor.subscribe('document', _id).ready()
-      if (!ready) return
-      this.setState({ ready })
-    })
-  }
-
-  componentWillUnmount() {
-    this.tracker && this.tracker.stop()
   }
 
   changeSideId = ({ sideId }) => this.setState({ sideId })
 
   render() {
-    const { ready, sideId } = this.state
+    const { sideId } = this.state
     const { _id } = this.props.match.params
 
-    return ready ? (
+    return (
       <div  style={{ display: 'flex' }}>
         <div id='doc-body'>
           <DocumentHead _id={_id} />
@@ -220,8 +206,17 @@ class Document extends Component {
         </div>
         {sideId && <Side _id={sideId}/>}
       </div>
-    ) : <div>loading</div>
+    )
   }
 }
 
-export default props => <Document {...props} />
+const DocumentTracker = (props, onData) => {
+  const { _id } = props.match.params
+  const ready = Meteor.subscribe('document', _id).ready()
+  if (!ready) return
+  onData(null, {})
+}
+
+const DocumentContainer = withTracker(DocumentTracker)(DocumentComponent)
+
+export default props => <DocumentContainer {...props} />
