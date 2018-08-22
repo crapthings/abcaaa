@@ -1,7 +1,7 @@
 const Nav = ({ history }) => {
   return (
     <ul>
-      <li><a href='#' onClick={() => history.push('/')}>Home</a></li>
+      <li><a href='#' onClick={evt => evt.preventDefault() || history.push('/')}>Home</a></li>
     </ul>
   )
 }
