@@ -1,20 +1,30 @@
+import a from '/imports/a'
+
+withTracker = a.withTracker
+
 import Textarea from 'react-textarea-autosize'
 
 const tracker = (props, onData) => {
-  const { _id, currentSideId } = props
+  const { _id } = props
+  const currentSideId = _.get(props, 'location.state.currentParagraphId')
   const doc = Documents.findOne(_id)
   const paragraphs = Paragraphs.find({ documentId: _id }).fetch()
-  console.log('tracker', props)
+  // console.log('tracker', props)
   onData(null, { _id, doc, paragraphs, currentSideId })
 }
 
 class comp extends Component {
   onClick = ({ _id }) => evt => {
-    this.props.changeSideId({ sideId: _id })
+    // console.log(_id)
+    this.props.history.push({ state: {
+      currentParagraphId: _id
+    }})
   }
 
   onClickAlt = ({ _id }) => evt => {
-    this.props.changeSideId({ sideId: _id })
+    this.props.history.replace({ state: {
+      currentParagraphId: undefined
+    }})
     this.refs.newline.focus()
   }
 
