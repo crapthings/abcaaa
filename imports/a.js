@@ -42,13 +42,11 @@ const initialState = withState(WITH_STATE_PROPS[0], WITH_STATE_PROPS[1], false)
 
 const trackReactiveSource = (tracker, options) => lifecycle({
   componentDidMount() {
-    console.log(1)
     Meteor.defer(() => {
       this._onData = (err, nextProps) => {
         if (err) {
           this.props._setWithTrackerState(err)
         } else {
-          console.log(nextProps)
           this.setState(nextProps, () => this.props._setWithTrackerState(true))
         }
       }
@@ -61,9 +59,7 @@ const trackReactiveSource = (tracker, options) => lifecycle({
 
   componentWillReceiveProps(nextProps) {
     if (isEqual(omit(this.props, WITH_STATE_PROPS), omit(nextProps, WITH_STATE_PROPS))) return
-    console.log(JSON.stringify(nextProps, null, 2))
-    this.handler = Tracker.nonreactive(() => Tracker.autorun(() => {
-
+    this.handler = Tracker.nonreactive(() => Tracker.autorun(c => {
       this.trackerHandler = tracker(nextProps, this._onData, { ..._defaults.env })
     }))
   },
