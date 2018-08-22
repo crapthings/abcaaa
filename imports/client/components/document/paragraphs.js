@@ -1,7 +1,3 @@
-import a from '/imports/a'
-
-withTracker = a.withTracker
-
 import Textarea from 'react-textarea-autosize'
 
 const tracker = (props, onData) => {

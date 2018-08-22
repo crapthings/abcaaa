@@ -1,3 +1,10 @@
+const tracker = (props, onData) => {
+  const ready = Meteor.subscribe('documents').ready()
+  if (!ready) return
+  const documents = Documents.find().fetch()
+  onData(null, { documents })
+}
+
 const CreateDocumentBtn = () => (
   <button
     onClick={() => {
@@ -11,22 +18,9 @@ const CreateDocumentBtn = () => (
 const EmptyDocumentBtn = () => <button onClick={() => Meteor.call('dev.documents.empty')}>dev empty documents</button>
 
 class DocumentList extends Component {
-  state = {
-    documents: [],
-  }
-
-  componentDidMount() {
-    this.tracker = Tracker.autorun(() => {
-      const ready = Meteor.subscribe('documents').ready()
-      if (!ready) return
-      const documents = Documents.find().fetch()
-      this.setState({ documents })
-    })
-  }
-
   render() {
     return (
-      this.state.documents.map(({ _id, title }) => (
+      this.props.documents.map(({ _id, title }) => (
         <div key={_id}>
           <a href='#' onClick={evt => {
             evt.preventDefault()
@@ -38,9 +32,11 @@ class DocumentList extends Component {
   }
 }
 
+const DocumentsContainer = withTracker(tracker)(DocumentList)
+
 export default props => <div>
   <h1>home</h1>
   <CreateDocumentBtn/>
   <EmptyDocumentBtn/>
-  <DocumentList {...props}/>
+  <DocumentsContainer {...props}/>
 </div>
