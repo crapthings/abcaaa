@@ -9,7 +9,7 @@ import SortableTree, {
 const tracker = (props, onData) => {
   const { _id } = props
   const currentSideId = _.get(props, 'location.state.currentParagraphId')
-  const flatData = Nodes.find({}).map(item => {
+  const flatData = Nodes.find({}, { sort: { order: 1 } }).map(item => {
     item.title = item.content
     item.subtitle = item._id
     return item
@@ -29,6 +29,9 @@ class Tree extends Component {
   }
 
   onMoveNode = ({ treeData, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex }) => {
+    if (_.isEqual(prevPath, nextPath)) return
+    const prevNode = _.get(nextParentNode, `children.${nextTreeIndex - 1 - 1}`)
+    const nextNode = _.get(nextParentNode, `children.${nextTreeIndex}`)
     console.log('treeData', treeData)
     console.log('node', node)
     console.log('nextParentNode', nextParentNode)
@@ -36,9 +39,21 @@ class Tree extends Component {
     console.log('prevTreeIndex', prevTreeIndex)
     console.log('nextPath', nextPath)
     console.log('nextTreeIndex', nextTreeIndex)
+    console.log('prevNode', prevNode)
+    console.log('nextNode', nextNode)
     if (nextParentNode) {
+      let order
+      if (prevNode && nextNode) {
+        console.log(1)
+        order = _.random(prevNode.order, nextNode.order, true)
+      }
+      if (!prevNode && nextNode)
+        order = _.random(nextNode.order, true)
+      if (!nextNode && prevNode)
+        order = Date.now()
+      // console.log(order)
       const parentNodeId = nextParentNode._id
-      Meteor.call('nodes.update.parent', node._id, { parentNodeId })
+      Meteor.call('nodes.update.parent', node._id, { order, parentNodeId })
     }
   }
 
