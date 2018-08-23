@@ -7,9 +7,9 @@ const Nav = ({ history }) => {
 }
 
 export default children => props => (
-  <div>
+  <div id='layout' >
     <Nav {...props} />
-    <div>
+    <div id='main'>
       {children(props)}
     </div>
   </div>

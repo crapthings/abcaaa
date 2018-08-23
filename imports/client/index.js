@@ -8,5 +8,6 @@ Meteor.startup(function () {
 function createElement (tag) {
   const div = document.createElement('div')
   document.body.appendChild(div)
+  div.id = 'wrapper'
   return div
 }

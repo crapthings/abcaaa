@@ -1,11 +1,7 @@
-Meteor.publish('documents', function () {
-  return Documents.find()
+Meteor.publish('nodes.isRoot', function () {
+  return Nodes.find({ isRoot: true })
 })
 
-Meteor.publish('document', function (_id) {
-  return [Documents.find({ _id }), Paragraphs.find({ documentId: _id })]
-})
-
-Meteor.publish('paragraphs', function (documentId) {
-  return Paragraphs.find({ documentId })
+Meteor.publish('nodes', function (_id) {
+  return Nodes.find({ $or: [{ _id }, { rootId: _id }, { parentNodeId: _id }] })
 })

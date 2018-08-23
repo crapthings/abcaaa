@@ -13,7 +13,7 @@ export default () => (
   <Router>
     <Fragment>
       <Route path='/' render={Layout(Home)} exact />
-      <Route path='/documents/:_id' render={Layout(Document)} />
+      <Route path='/nodes/:_id' render={Layout(Document)} />
     </Fragment>
   </Router>
 )

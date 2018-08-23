@@ -1,3 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'SF Pro SC', 'SF Pro Text', 'SF Pro Icons', 'PingFang SC', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif
 }
@@ -16,6 +22,25 @@ input[type='text'] {
   width: 100%;
 }
 
+#wrapper {
+  height: 100vh;
+}
+
+#layout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#main {
+  display: flex;
+  flex: 1;
+}
+
+#main > div {
+  width: 100%;
+}
+
 #doc-body {
   flex: 1;
   padding: 16px;
@@ -29,4 +54,22 @@ input[type='text'] {
 
 .active {
   background-color: palegreen;
+}
+
+.rst__rowContents {
+  flex-direction: row-reverse;
+}
+
+.rst__rowLabel {
+  flex: 1 !important;
+  padding-right: 0 !important;
+}
+
+.rst__rowToolbar {
+  margin-right: 10px !important;
+}
+
+#CreateText textarea {
+ width: 100%;
+ resize: none;
 }
