@@ -43,15 +43,15 @@ class Tree extends Component {
     console.log('nextNode', nextNode)
     if (nextParentNode) {
       let order
-      if (prevNode && nextNode) {
-        console.log(1)
+      if (prevNode && nextNode)
         order = _.random(prevNode.order, nextNode.order, true)
-      }
+      if (!prevNode && !nextNode)
+        order = Date.now()
       if (!prevNode && nextNode)
         order = _.random(nextNode.order, true)
       if (!nextNode && prevNode)
         order = Date.now()
-      // console.log(order)
+      console.log(order)
       const parentNodeId = nextParentNode._id
       Meteor.call('nodes.update.parent', node._id, { order, parentNodeId })
     }
