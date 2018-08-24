@@ -12,6 +12,9 @@ const tracker = (props, onData) => {
   const flatData = Nodes.find({}, { sort: { order: 1 } }).map(item => {
     item.title = item.content
     item.subtitle = item._id
+    if (item.labels) {
+      item.subtitle += 'labels: ' + item.labels.join(', ')
+    }
     return item
   })
   const nodes = getTreeFromFlatData({
@@ -75,22 +78,52 @@ class Tree extends Component {
             if (rowInfo.node.isRoot) {
               return {
                 buttons: [
-                  <button className='btn btn-outline-success' style={{ verticalAlign: 'middle' }}
-                    onClick={() => {
-                      const rootId = this.props._id
-                      const parentNodeId = rowInfo.node._id
-                      const content = prompt('输入内容')
-                      Meteor.call('nodes.create', { rootId, parentNodeId, content })
-                    }}
-                  >
-                    + child
-                  </button>
+                  (
+                    <button className='btn btn-outline-success' style={{ verticalAlign: 'middle' }}
+                      onClick={() => {
+                        const rootId = this.props._id
+                        const _id = rowInfo.node._id
+                        let labels = prompt('')
+                        labels = labels.split(' ')
+                        labels = _.chain(labels).reject(_.isEmpty).map(_.trim).uniq().value()
+                        if (_.isEmpty(labels)) return
+                        Meteor.call('nodes.update.labels', _id, { labels })
+                      }}
+                    >
+                      + label
+                    </button>
+                  ), (
+                    <button className='btn btn-outline-success' style={{ verticalAlign: 'middle' }}
+                      onClick={() => {
+                        const rootId = this.props._id
+                        const parentNodeId = rowInfo.node._id
+                        const content = prompt('输入内容')
+                        Meteor.call('nodes.create', { rootId, parentNodeId, content })
+                      }}
+                    >
+                      + child
+                    </button>
+                  )
                 ],
               }
             } else {
               return {
                 buttons: [
                   (
+                    <button className='btn btn-outline-success' style={{ verticalAlign: 'middle' }}
+                      onClick={() => {
+                        const rootId = this.props._id
+                        const _id = rowInfo.node._id
+                        let labels = prompt('')
+                        labels = labels.split(' ')
+                        labels = _.chain(labels).reject(_.isEmpty).map(_.trim).uniq().value()
+                        if (_.isEmpty(labels)) return
+                        Meteor.call('nodes.update.labels', _id, { labels })
+                      }}
+                    >
+                      + label
+                    </button>
+                  ), (
                     <button className='btn btn-outline-success' style={{ verticalAlign: 'middle', }}
                       onClick={() => {
                         if (rowInfo.parentNode) {

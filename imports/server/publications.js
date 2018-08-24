@@ -8,3 +8,7 @@ Meteor.publish('nodes', function (_id) {
     { sort: { order: 1 } }
   )
 })
+
+Meteor.publish(null, function () {
+  return Labels.find({})
+})
