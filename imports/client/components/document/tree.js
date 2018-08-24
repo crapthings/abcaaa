@@ -41,6 +41,10 @@ class Tree extends Component {
     console.log('nextTreeIndex', nextTreeIndex)
     console.log('prevNode', prevNode)
     console.log('nextNode', nextNode)
+    if (nextPath.length > prevPath.length)
+      console.log(1)
+    if (nextPath.length < prevPath.length)
+      console.log(1)
     if (nextParentNode) {
       let order
       if (prevNode && nextNode)
