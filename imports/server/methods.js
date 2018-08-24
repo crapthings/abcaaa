@@ -74,7 +74,6 @@ Meteor.methods({
 
   'nodes.remove'(_id) {
     const hasChildren = Nodes.findOne({ parentNodeId: _id })
-    console.log(hasChildren)
     if (hasChildren) return
     return Nodes.remove(_id)
   },
@@ -85,7 +84,7 @@ Meteor.methods({
     if (!_node) return
     let relatedNodes = Nodes.find({ labels: { $in: keywords } }).fetch()
     // mock level
-    relatedNodes = _.concat(relatedNodes, Nodes.find({ parentNodeId: { $in: _.map(relatedNodes, '_id') } }).fetch())
+    relatedNodes = _.concat(relatedNodes, findChildrenNodes(_.map(relatedNodes, '_id')))
     relatedNodes = _.map(relatedNodes, node => {
       node.originalId = _.clone(node._id)
       node.originalParentNodeId = _.clone(node.parentNodeId)
@@ -123,3 +122,9 @@ Meteor.methods({
     return Nodes.remove({ $or: [{ _id }, { rootId: _id }] })
   },
 })
+
+function findChildrenNodes(ids, nodes = []) {
+  const _nodes = Nodes.find({ parentNodeId: { $in: ids } }).fetch()
+  const _ids = _.map(_nodes, '_id')
+  return _ids.length ? findChildrenNodes(_ids, _.concat(nodes, _nodes)) : nodes
+}
