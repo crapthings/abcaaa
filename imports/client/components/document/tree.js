@@ -17,6 +17,7 @@ const tracker = (props, onData) => {
     }
     return item
   })
+  console.log('flatData', flatData)
   const nodes = getTreeFromFlatData({
     flatData,
     getKey: node => node._id,
@@ -98,11 +99,17 @@ class Tree extends Component {
                         const rootId = this.props._id
                         const parentNodeId = rowInfo.node._id
                         const content = prompt('输入内容')
-                        Meteor.call('nodes.create', { rootId, parentNodeId, content })
+                        console.log(rowInfo)
+                        let order = 0
+                        const childrenSize = _.chain(rowInfo).get('node.children').size().value()
+                        if (childrenSize < 1)
+                          order = 1
+                        else if (childrenSize > 0)
+                          order = childrenSize + 1
+                        console.log(childrenSize)
+                        Meteor.call('nodes.create', { order, rootId, parentNodeId, content })
                       }}
-                    >
-                      + child
-                    </button>
+                    >+ child</button>
                   )
                 ],
               }
@@ -126,15 +133,19 @@ class Tree extends Component {
                   ), (
                     <button className='btn btn-outline-success' style={{ verticalAlign: 'middle', }}
                       onClick={() => {
+                        console.log(rowInfo)
+                        return
                         if (rowInfo.parentNode) {
+                          console.log(rowInfo.parentNode.children[rowInfo.treeIndex])
+                          const nextNode = rowInfo.parentNode.children[rowInfo.treeIndex]
                           const rootId = this.props._id
                           const parentNodeId = rowInfo.parentNode._id
-                          const content = prompt('输入内容')
+                          const content = prompt('1输入内容')
                           Meteor.call('nodes.create', { rootId, parentNodeId, content })
                         } else {
                           const rootId = this.props._id
                           const parentNodeId = rowInfo.node._id
-                          const content = prompt('输入内容')
+                          const content = prompt('2输入内容')
                           Meteor.call('nodes.create', { rootId, parentNodeId, content })
                         }
                       }}

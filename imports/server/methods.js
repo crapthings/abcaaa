@@ -12,9 +12,10 @@ Meteor.methods({
     return Nodes.insert(node)
   },
 
-  'nodes.create'({ rootId, parentNodeId, content }) {
+  'nodes.create'({ order, rootId, parentNodeId, content }) {
     content = content || faker.lorem.sentences()
     const node = {
+      order,
       rootId,
       parentNodeId,
       expanded: true,
