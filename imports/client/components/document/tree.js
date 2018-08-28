@@ -17,7 +17,7 @@ const tracker = (props, onData) => {
     }
     return item
   })
-  console.log('flatData', flatData)
+  // console.log('flatData', flatData)
   const nodes = getTreeFromFlatData({
     flatData,
     getKey: node => node._id,
@@ -28,16 +28,25 @@ const tracker = (props, onData) => {
 }
 
 class Tree extends Component {
+  state = {
+    treeData: this.props.nodes
+  }
+
   onVisibilityToggle = ({ node, expanded }) => {
     Meteor.call('nodes.update.expanded', node._id, { expanded })
   }
 
-  onMoveNode = ({ treeData, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex }) => {
+  componentWillReceiveProps({ nodes }) {
+    this.setState({ treeData: nodes })
+  }
+
+  onMoveNode = rowInfo => {
+    console.log(rowInfo)
+    const { treeData, node, nextParentNode, prevPath, prevTreeIndex, nextPath, nextTreeIndex } = rowInfo
     if (_.isEqual(prevPath, nextPath)) return
     const prevNode = _.get(nextParentNode, `children.${nextTreeIndex - 1 - 1}`)
     const nextNode = _.get(nextParentNode, `children.${nextTreeIndex}`)
-    console.log('treeData', treeData)
-    console.log('node', node)
+    console.log('currentNode', node)
     console.log('nextParentNode', nextParentNode)
     console.log('prevPath', prevPath)
     console.log('prevTreeIndex', prevTreeIndex)
@@ -61,7 +70,9 @@ class Tree extends Component {
         order = Date.now()
       console.log(order)
       const parentNodeId = nextParentNode._id
-      Meteor.call('nodes.update.parent', node._id, { order, parentNodeId })
+      this.setState({ treeData }, () => {
+        Meteor.call('nodes.update.parent', node._id, { order, parentNodeId })
+      })
     }
   }
 
@@ -73,7 +84,7 @@ class Tree extends Component {
           style={{ flex: 1 }}
           onVisibilityToggle={this.onVisibilityToggle}
           isVirtualized={true}
-          treeData={this.props.nodes}
+          treeData={this.state.treeData}
           onChange={_.noop}
           generateNodeProps={rowInfo => {
             if (rowInfo.node.isRoot) {
